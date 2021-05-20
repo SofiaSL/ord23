@@ -16,24 +16,14 @@ void now(std::atomic<bool>& running)
 std::map<int_t, int> 
 factorint(const int_t num)
 {
-    auto p1 = num;
+    auto p1 = static_cast<uint64_t>(num);
+    auto a = factors{};
     auto result = std::map<int_t, int>{};
-    auto f = int_t{2};
-    while (f * f <= p1)
-    {
-        while (p1 % f == 0)
-        {
-            auto [it, ok] = result.try_emplace(f, 1);
-            if (!ok)
-            {
-                auto& [key, val] = *it;
-                val += 1;
-            }
-            p1 /= f;
-        }
-        f = mppp::nextprime(f);
-    }
-    if (p1 not_eq 1)  result.try_emplace(p1, 1);
+    factor(p1, &a);
+
+    for (unsigned int j = 0; j < a.nfactors; j++)
+        result[a.p[j]] = a.e[j];
+
     return result;
 }
 

@@ -11,12 +11,14 @@ find_package(mp++ REQUIRED)
 find_package(Threads)
 
 add_executable(ord23 main.cpp
-    utils.cpp utils.h)
+    utils.cpp utils.h
+    factor.cpp factor.h longlong.h primes.h)
 
 target_link_libraries(ord23 mp++::mp++ Threads::Threads)
 
 add_executable(tests tests.cpp
     utils.cpp utils.h
+    factor.cpp factor.h
     catch.cpp catch.hpp)
 
 target_link_libraries(tests mp++::mp++ Threads::Threads)

@@ -8,6 +8,7 @@
 #include <thread>
 #include <map>
 #include <mp++/mp++.hpp>
+#include "factor.h"
 
 using int_t = mppp::integer<1>;
 
