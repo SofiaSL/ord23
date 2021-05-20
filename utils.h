@@ -20,6 +20,6 @@ template <int Base, typename T>
 T modpow(T exponent, T modulus);
 
 template <int N>
-int_t multiplicative_order(int_t p);
+int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors);
 
 bool coprime_orders(int_t p);

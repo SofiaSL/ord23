@@ -53,10 +53,9 @@ T modpow(T exponent, T modulus)
 }
 
 template <int N>
-int_t multiplicative_order(int_t p)
+int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors)
 {
     namespace view = std::ranges::views;
-    auto factors = factorint(p - 1);
     auto group_order = p - 1;
     auto order = 1;
     for (const auto& [P, e] : factors)
@@ -78,7 +77,8 @@ int_t multiplicative_order(int_t p)
 
 bool coprime_orders(int_t p)
 {
-    const auto mo2 = multiplicative_order<2>(p);
-    const auto mo3 = multiplicative_order<3>(p);
+    const auto factors = factorint(p - 1);
+    const auto mo2 = multiplicative_order<2>(p, factors);
+    const auto mo3 = multiplicative_order<3>(p, factors);
     return 1 == mppp::gcd(mo2, mo3);
 }

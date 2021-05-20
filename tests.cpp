@@ -100,10 +100,18 @@ TEST_CASE( "modpow", "[modpow]" ) {
 
 TEST_CASE( "multiplicative_order", "[multiplicative_order]" ) {
 
-    REQUIRE( multiplicative_order<2>(113) == 28 );
-    REQUIRE( multiplicative_order<3>(113) == 112 );
+    {
+        const auto p = 113; 
+        const auto factors = factorint(p - 1);
+        REQUIRE( multiplicative_order<2>(p, factors) == 28 );
+        REQUIRE( multiplicative_order<3>(p, factors) == 112 );
+    }
 
-    REQUIRE( multiplicative_order<2>(683) == 22 );
-    REQUIRE( multiplicative_order<3>(683) == 31 );
-    REQUIRE( mppp::gcd(int_t{22}, int_t{31}) == 1 );
+    {
+        const auto p = 683;
+        const auto factors = factorint(p - 1);
+        REQUIRE( multiplicative_order<2>(p, factors) == 22 );
+        REQUIRE( multiplicative_order<3>(p, factors) == 31 );
+        REQUIRE( mppp::gcd(int_t{22}, int_t{31}) == 1 );
+    }
 }
