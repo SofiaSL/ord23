@@ -47,7 +47,7 @@ int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors)
 {
     namespace view = std::ranges::views;
     auto group_order = p - 1;
-    auto order = 1;
+    auto order = int_t{1};
     for (const auto& [P, e] : factors)
     {
         auto exponent = group_order;
