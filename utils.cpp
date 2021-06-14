@@ -1,4 +1,3 @@
-
 #include "utils.h"
 
 void now(std::atomic<bool>& running)
@@ -13,12 +12,11 @@ void now(std::atomic<bool>& running)
     }
 }
 
-std::map<int_t, int> 
-factorint(const int_t num)
+std::map<int, int> factorint(const int num)
 {
     auto p1 = static_cast<uint64_t>(num);
     auto a = factors{};
-    auto result = std::map<int_t, int>{};
+    auto result = std::map<int, int>{};
     factor(p1, &a);
 
     for (unsigned int j = 0; j < a.nfactors; j++)
@@ -42,12 +40,25 @@ T modpow(T exponent, T modulus)
     return result;
 }
 
+template <typename T>
+T pow(T base, T exponent)
+{
+    auto result = T{1};
+    while (exponent > 0)
+    {
+        if (exponent & 1) result = (result * base);
+        base = (base * base);
+        exponent >>= 1;
+    }
+    return result;
+}
+
 template <int N>
-int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors)
+int multiplicative_order(int p, const std::map<int, int>& factors)
 {
     namespace view = std::ranges::views;
     auto group_order = p - 1;
-    auto order = int_t{1};
+    auto order = int{1};
     for (const auto& [P, e] : factors)
     {
         auto exponent = group_order;
@@ -55,20 +66,29 @@ int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors)
         {
             if (modpow<N>(exponent, p) not_eq 1)
             {
-                order *= mppp::pow(P, e - f + 1);
+                order *= pow(P, e - f + 1);
                 break;
             }
-            mppp::tdiv_q(exponent, exponent, P);
+            //mppp::tdiv_q(exponent, exponent, P);
+            exponent %= P;
         }
 
     }
     return order;
 }
 
-bool coprime_orders(int_t p)
+bool coprime_orders(int p)
 {
     const auto factors = factorint(p - 1);
     const auto mo2 = multiplicative_order<2>(p, factors);
     const auto mo3 = multiplicative_order<3>(p, factors);
-    return 1 == mppp::gcd(mo2, mo3);
+    return 1 == std::gcd(mo2, mo3);
+}
+
+// crude first draft. Remember to write something more efficient before merging into main
+int nextprime(int n) {
+    do {
+        ++n;
+    } while(factorint(n).size() != 1);
+    return n;
 }
