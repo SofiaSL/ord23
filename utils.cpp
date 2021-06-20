@@ -12,11 +12,11 @@ void now(std::atomic<bool>& running)
     }
 }
 
-std::map<int, int> factorint(const int num)
+std::map<uint64_t, uint64_t> factorint(const uint64_t num)
 {
     auto p1 = static_cast<uint64_t>(num);
     auto a = factors{};
-    auto result = std::map<int, int>{};
+    auto result = std::map<uint64_t, uint64_t>{};
     factor(p1, &a);
 
     for (unsigned int j = 0; j < a.nfactors; j++)
@@ -40,6 +40,18 @@ T modpow(T exponent, T modulus)
     return result;
 }
 
+uint64_t modpow(uint64_t base, uint64_t exponent, uint64_t modulus) {
+    base %= modulus;
+    uint64_t result {1};
+    while (exponent > 0)
+    {
+        if (exponent & 1) result = (result * base) % modulus;
+        base = (base * base) % modulus;
+        exponent >>= 1;
+    }
+    return result;
+}
+
 template <typename T>
 T pow(T base, T exponent)
 {
@@ -53,20 +65,23 @@ T pow(T base, T exponent)
     return result;
 }
 
-template <int N>
-int multiplicative_order(int p, const std::map<int, int>& factors)
+template <uint64_t N>
+uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& factors)
 {
     namespace view = std::ranges::views;
-    auto group_order = p - 1;
-    auto order = int{1};
+    uint64_t group_order = p - 1;
+    uint64_t order {1};
     for (const auto& [P, e] : factors)
     {
         auto exponent = group_order;
-        for (const auto f: view::iota(0, e + 1))
+        for (const auto f: view::iota(0ull, e + 1))
         {
             if (modpow<N>(exponent, p) not_eq 1)
             {
-                order *= pow(P, e - f + 1);
+                uint64_t copy = P;
+                //std::cout << pow(P, e - f + 1) << " ";
+                //order *= pow(P, e - f + 1);
+                
                 break;
             }
             exponent /= P;
@@ -76,11 +91,38 @@ int multiplicative_order(int p, const std::map<int, int>& factors)
     return order;
 }
 
-bool coprime_orders(int p)
+uint64_t order(const uint64_t n, uint64_t p) {
+    auto factors = factorint(p - 1);
+    namespace view = std::ranges::views;
+    uint64_t group_order = p - 1;
+    uint64_t order {1};
+    for (const auto& [P, e] : factors)
+    {
+        uint64_t exponent = group_order;
+        for (const auto f: view::iota(0ull, e + 1))
+        {
+            if (modpow(n, exponent, p) != 1)
+            {
+                uint64_t alpha = P;
+                uint64_t beta =  e - f + 1;
+                //std::cout << pow(alpha, beta) << " ";
+                order *= pow(alpha, beta);
+                
+                break;
+            }
+            exponent /= P;
+        }
+
+    }
+    return order;
+}
+
+bool coprime_orders(uint64_t p)
 {
     const auto factors = factorint(p - 1);
-    const auto mo2 = multiplicative_order<2>(p, factors);
-    const auto mo3 = multiplicative_order<3>(p, factors);
+    const auto mo2 = multiplicative_order<2ull>(p, factors);
+    const auto mo3 = multiplicative_order<3ull>(p, factors);
+    if(1 == std::gcd(mo2, mo3) || p == 599479) std::cout << p << " " << mo2 << " " << mo3 << "\n";
     return 1 == std::gcd(mo2, mo3);
 }
 
@@ -88,6 +130,6 @@ bool coprime_orders(int p)
 int nextprime(int n) {
     do {
         ++n;
-    } while(factorint(n).size() != 1);
+    } while(factorint(n) != std::map<uint64_t, uint64_t>({{n, 1}}) );
     return n;
 }
