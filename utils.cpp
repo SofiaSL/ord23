@@ -69,8 +69,7 @@ int multiplicative_order(int p, const std::map<int, int>& factors)
                 order *= pow(P, e - f + 1);
                 break;
             }
-            //mppp::tdiv_q(exponent, exponent, P);
-            exponent %= P;
+            exponent /= P;
         }
 
     }
