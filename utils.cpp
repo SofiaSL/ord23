@@ -119,10 +119,11 @@ uint64_t order(const uint64_t n, uint64_t p) {
 
 bool coprime_orders(uint64_t p)
 {
-    const auto factors = factorint(p - 1);
-    const auto mo2 = multiplicative_order<2ull>(p, factors);
-    const auto mo3 = multiplicative_order<3ull>(p, factors);
-    if(1 == std::gcd(mo2, mo3) || p == 599479) std::cout << p << " " << mo2 << " " << mo3 << "\n";
+    //const auto factors = factorint(p - 1);
+    const uint64_t two = 2;
+    const auto mo2 = order(two, p);
+    const uint64_t three = 3;
+    const auto mo3 = order(three, p);
     return 1 == std::gcd(mo2, mo3);
 }
 

@@ -10,6 +10,16 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 find_package(mp++ REQUIRED)
 find_package(Threads)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    nanobench
+    GIT_REPOSITORY https://github.com/martinus/nanobench.git
+    GIT_TAG v4.1.0
+    GIT_SHALLOW TRUE)
+
+FetchContent_MakeAvailable(nanobench)
+
 add_executable(ord23 main.cpp
     utils.cpp utils.h
     factor.cpp factor.h longlong.h primes.h)
@@ -22,3 +32,10 @@ add_executable(tests tests.cpp
     catch.cpp catch.hpp)
 
 target_link_libraries(tests mp++::mp++ Threads::Threads)
+
+add_executable(profiling profiling.cpp
+               nanobench.h
+               utils.cpp utils.h
+               factor.cpp factor.h)
+
+target_link_libraries(profiling nanobench)

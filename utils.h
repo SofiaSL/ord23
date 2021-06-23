@@ -30,6 +30,6 @@ uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& fa
 
 uint64_t order(uint64_t n, uint64_t p);
 
-bool coprime_orders(int p);
+bool coprime_orders(uint64_t p);
 
 int nextprime(int n);

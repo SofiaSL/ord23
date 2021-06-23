@@ -85,12 +85,7 @@ int main()
     }*/
     int c = 0;
     for(i = nextprime(1'000'000); c < 1000; i = nextprime(i)) {
-        std::cout << i << " ";
-        uint64_t i2 = i;
-        const auto factors = factorint(i2 - 1ull);
-        const uint64_t two = 2;
-        const auto mo2 = order(two, i);
-        std::cout << mo2 << "\n";
+        if(coprime_orders(i)) std::cout << i << "\n";
         ++c;
     }
 }
