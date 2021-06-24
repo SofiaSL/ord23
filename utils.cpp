@@ -134,3 +134,19 @@ int nextprime(int n) {
     } while(factorint(n) != std::map<uint64_t, uint64_t>({{n, 1}}) );
     return n;
 }
+
+std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max) {
+    std::vector<bool> bools(max - min, true);
+    for(auto p : primes) {
+		uint64_t n = 1 + min / p; 
+		while(p * n < max) {
+			bools[p * n - min] = false;
+			++n;
+		}
+	}
+    std::vector<uint64_t> out;
+    for(int iter = 1; iter != bools.size(); ++iter) {
+        if(bools[iter]) out.push_back(min + iter);
+    }
+    return out;
+}

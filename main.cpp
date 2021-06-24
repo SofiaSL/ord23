@@ -2,7 +2,6 @@
 #include "rang.hpp"
 #include <mutex>
 #include <atomic>
-#include <vector>
 #include <thread>
 
 auto counter = int{0};
@@ -73,16 +72,18 @@ int main()
     for(auto& thread : threads) {
         thread.join();
     }*/
-    /*int c = 0;
-    for(int i = 5; i < 1000; i = nextprime(i)) {
-        const auto factors = factorint(i - 1);
-        const auto mo2 = multiplicative_order<2>(i, factors);
-        const auto mo3 = multiplicative_order<3>(i, factors);
+    const constexpr uint64_t ten13halves {3'162'277}; // sqrt(10^13)
+    const constexpr uint64_t ten13 {10'000'000'000'000};
+    const constexpr uint64_t batch_size {100'000'000};
 
-        ++c;
+    std::vector<unsigned> primes; // all the primes less than 10^6.5
 
-        std::cout << i << " " << mo2 << " " << mo3 << "\n";
-    }*/
+    for(unsigned n = 2; n != ten13halves; ++n) {
+		if(std::all_of(primes.begin(), primes.end(), [&](int i) {return n % i != 0;})) {
+			primes.push_back(n);
+		}
+	}
+
     int c = 0;
     for(i = nextprime(1'000'000); c < 1000; i = nextprime(i)) {
         if(coprime_orders(i)) std::cout << i << "\n";

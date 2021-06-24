@@ -10,6 +10,7 @@
 //#include <mp++/mp++.hpp>
 #include "factor.h"
 #include <numeric>
+#include <vector>
 
 //using int_t = mppp::integer<1>;
 
@@ -33,3 +34,5 @@ uint64_t order(uint64_t n, uint64_t p);
 bool coprime_orders(uint64_t p);
 
 int nextprime(int n);
+
+std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max);
