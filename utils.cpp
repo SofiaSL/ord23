@@ -91,8 +91,7 @@ uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& fa
     return order;
 }
 
-uint64_t order(const uint64_t n, uint64_t p) {
-    auto factors = factorint(p - 1);
+uint64_t order(std::map<uint64_t, uint64_t> factors, const uint64_t n, uint64_t p) {
     namespace view = std::ranges::views;
     uint64_t group_order = p - 1;
     uint64_t order {1};
@@ -119,20 +118,13 @@ uint64_t order(const uint64_t n, uint64_t p) {
 
 bool coprime_orders(uint64_t p)
 {
-    //const auto factors = factorint(p - 1);
-    const uint64_t two = 2;
-    const auto mo2 = order(two, p);
-    const uint64_t three = 3;
-    const auto mo3 = order(three, p);
+    if(p == 2 || p == 3) return false;
+    const auto factors = factorint(p - 1);
+    const constexpr uint64_t two = 2;
+    const auto mo2 = order(factors, two, p);
+    const constexpr uint64_t three = 3;
+    const auto mo3 = order(factors, three, p);
     return 1 == std::gcd(mo2, mo3);
-}
-
-// crude first draft. Remember to write something more efficient before merging into main
-int nextprime(int n) {
-    do {
-        ++n;
-    } while(factorint(n) != std::map<uint64_t, uint64_t>({{n, 1}}) );
-    return n;
 }
 
 std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max) {
@@ -146,7 +138,7 @@ std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, u
 	}
     std::vector<uint64_t> out;
     for(int iter = 1; iter != bools.size(); ++iter) {
-        if(bools[iter]) out.push_back(min + iter);
+        if(bools[iter] && min + iter != 1) out.push_back(min + iter);
     }
     return out;
 }

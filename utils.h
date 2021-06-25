@@ -29,10 +29,8 @@ T pow(T base, T exponent);
 template <uint64_t N>
 uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& factors);
 
-uint64_t order(uint64_t n, uint64_t p);
+uint64_t order(std::map<uint64_t, uint64_t> factors, uint64_t n, uint64_t p);
 
 bool coprime_orders(uint64_t p);
-
-int nextprime(int n);
 
 std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max);

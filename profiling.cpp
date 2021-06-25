@@ -4,7 +4,7 @@
 
 int main() {
 
-    std::vector<unsigned> primes; // all the primes less than 10^6.5
+    /*std::vector<unsigned> primes; // all the primes less than 10^6.5
 
     for(unsigned n = 2; n != 3'162'277; ++n) {
 		if(std::all_of(primes.begin(), primes.end(), [&](int i) {return n % i != 0;})) {
@@ -76,5 +76,5 @@ int main() {
 
     ankerl::nanobench::Bench().run("just finding the first thousand primes greater than 10^12 with rainbow table", [&] {
          ankerl::nanobench::doNotOptimizeAway(batch(primes, 1'000'000'000'000ull, 1'000 + 1'000'000'000'000ull));
-    });
+    });*/
 }

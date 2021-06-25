@@ -9,11 +9,11 @@ auto counter = int{0};
 uint64_t i{5};
 std::mutex m_screen;
 
-void primes(int id) {
-    while(i < 50'000) {
-        m_screen.lock();
+//void primes(int id) {
+    //while(i < 50'000) {
+        //m_screen.lock();
         //m_screen.unlock();
-        if(coprime_orders(i)) {
+        //if(coprime_orders(i)) {
             //m_screen.lock();
             /*std::cout << '\n'
                       << rang::fgB::red
@@ -21,18 +21,18 @@ void primes(int id) {
                       << rang::fg::reset
                       << std::flush;*/
             //m_screen.unlock();
-        }
+        //}
  
         //m_screen.lock();
-        i = nextprime(i);
+        //i = nextprime(i);
        // m_screen.unlock();
  
-        if(0 == (++counter % 10'000'000)) {
+        //if(0 == (++counter % 10'000'000)) {
             //m_screen.lock();
-            std::cout << '.' << std::flush;
+            //std::cout << '.' << std::flush;
             //m_screen.unlock();
-        }
-        m_screen.unlock();
+        //}
+        //m_screen.unlock();
         /*m_screen.lock();
         const auto factors = factorint(i - 1);
         const auto mo2 = multiplicative_order<2>(i, factors);
@@ -42,8 +42,8 @@ void primes(int id) {
         m_screen.lock();
         i = nextprime(i);
         m_screen.unlock();*/
-    }
-}
+    //}
+//}
         
 int main()
 {
@@ -84,9 +84,15 @@ int main()
 		}
 	}
 
-    int c = 0;
-    for(i = nextprime(1'000'000); c < 1000; i = nextprime(i)) {
-        if(coprime_orders(i)) std::cout << i << "\n";
-        ++c;
+    for(auto p : primes) {
+        if(coprime_orders(p)) std::cout << p << std::endl;
+    }
+
+    for(uint64_t n = 0; n != 100; ++n) {
+        auto v = batch(primes, n * batch_size, (n + 1) * batch_size);
+        for(auto p : v) {
+            if(coprime_orders(p)) std::cout << p << std::endl;
+        }
+        std::cout << "." << std::flush;
     }
 }
