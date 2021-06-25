@@ -42,7 +42,7 @@ T modpow(T exponent, T modulus)
 
 // https://stackoverflow.com/a/12171020
 // I need another fix. This just guts the performance
-uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
+/*uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
     int64_t res = 0;
     while (a != 0) {
         if (a & 1) res = (res + b) % m;
@@ -50,6 +50,18 @@ uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
         b = (b << 1) % m;
     }
     return res;
+}*/
+
+uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
+  uint64_t r;
+  __asm__
+  ( "mulq %2\n\t"
+      "divq %3"
+      : "=&d" (r), "+%a" (a)
+      : "rm" (b), "rm" (m)
+      : "cc"
+  );
+  return r;
 }
 
 uint64_t modpow(uint64_t base, uint64_t exponent, uint64_t modulus) {
