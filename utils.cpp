@@ -40,13 +40,27 @@ T modpow(T exponent, T modulus)
     return result;
 }
 
+// https://stackoverflow.com/a/12171020
+// I need another fix. This just guts the performance
+uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
+    int64_t res = 0;
+    while (a != 0) {
+        if (a & 1) res = (res + b) % m;
+        a >>= 1;
+        b = (b << 1) % m;
+    }
+    return res;
+}
+
 uint64_t modpow(uint64_t base, uint64_t exponent, uint64_t modulus) {
     base %= modulus;
     uint64_t result {1};
     while (exponent > 0)
     {
-        if (exponent & 1) result = (result * base) % modulus;
-        base = (base * base) % modulus;
+       //if (exponent & 1) result = (result * base) % modulus;
+        //base = (base * base) % modulus;
+        if (exponent & 1) result = mulmod(result, base, modulus);
+        base = mulmod(base, base, modulus);
         exponent >>= 1;
     }
     return result;
@@ -91,10 +105,10 @@ uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& fa
     return order;
 }
 
-uint64_t order(std::map<uint64_t, uint64_t> factors, const uint64_t n, uint64_t p) {
+std::vector<uint64_t> order(std::map<uint64_t, uint64_t> factors, const uint64_t n, uint64_t p) {
     namespace view = std::ranges::views;
     uint64_t group_order = p - 1;
-    uint64_t order {1};
+    std::vector<uint64_t> order;
     for (const auto& [P, e] : factors)
     {
         uint64_t exponent = group_order;
@@ -105,7 +119,8 @@ uint64_t order(std::map<uint64_t, uint64_t> factors, const uint64_t n, uint64_t 
                 uint64_t alpha = P;
                 uint64_t beta =  e - f + 1;
                 //std::cout << pow(alpha, beta) << " ";
-                order *= pow(alpha, beta);
+                //order *= pow(alpha, beta);
+                order.push_back(alpha);
                 
                 break;
             }
@@ -124,7 +139,12 @@ bool coprime_orders(uint64_t p)
     const auto mo2 = order(factors, two, p);
     const constexpr uint64_t three = 3;
     const auto mo3 = order(factors, three, p);
-    return 1 == std::gcd(mo2, mo3);
+    for(auto n1 : mo2) {
+        if(std::binary_search(mo3.begin(), mo3.end(), n1)) {
+            return false;
+        }
+    } 
+    return true;
 }
 
 std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max) {
