@@ -324,9 +324,7 @@ bool coprime_orders4(uint64_t p)
     return true;
 }
 
-// new code
-
-uint64_t mulmod5(uint64_t a, uint64_t b, uint64_t m) {
+/*uint64_t mulmod5(uint64_t a, uint64_t b, uint64_t m) {
   uint64_t r;
   __asm__
   ( "mulq %2\n\t"
@@ -339,8 +337,8 @@ uint64_t mulmod5(uint64_t a, uint64_t b, uint64_t m) {
 }
 
 uint64_t modpow_two(uint64_t exponent, uint64_t modulus) {
-    uint64_t result = 1 << (exponent % 64);
-    if(exponent < 64) return result;
+    uint64_t result = 1ull << (exponent % 64);
+    if(exponent < 64) return result % modulus;
 
 	uint64_t base = (1 + ~modulus) % modulus;
     exponent >>= 6;
@@ -396,7 +394,7 @@ bool order_three(std::map<uint64_t, uint64_t> factors, uint64_t p, std::vector<u
         uint64_t exponent = group_order;
         for (const auto f: view::iota(0ull, e + 1))
         {
-            if (modpow_two(exponent, p) != 1)
+            if (modpow_three(exponent, p) != 1)
             {
                 uint64_t alpha = P;
                 if(std::binary_search(mo2.begin(), mo2.end(), alpha)) return false;
@@ -415,10 +413,9 @@ bool coprime_orders5(uint64_t p)
     if(p == 2 || p == 3) return false;
     const auto factors = factorint(p - 1);
     const auto mo2 = order_two(factors, p);
-    const auto mo3 = order_three(factors, p, mo2);
     
-    return mo3;
-}
+    return  order_three(factors, p, mo2);
+}*/
 
 int main() {
 
@@ -430,10 +427,10 @@ int main() {
 		}
 	}
 
-    ankerl::nanobench::Bench().run("batch of 10^6 numbers after 10^12 (new)", [&] {
+    ankerl::nanobench::Bench().run("batch of 10^6 numbers after 10^12 (current)", [&] {
         auto v = batch(primes, 1'000'000'000'000ull, 1'000'001'000'000ull);
         for(auto i : v) {
-            ankerl::nanobench::doNotOptimizeAway(coprime_orders5(i));
+            ankerl::nanobench::doNotOptimizeAway(coprime_orders(i));
         }
     });
 

@@ -19,20 +19,15 @@ void now(std::atomic<bool>& running);
 
 std::map<uint64_t, uint64_t> factorint(const uint64_t num);
 
-template <int Base, typename T>
-T modpow(T exponent, T modulus);
-
 uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m);
 
-uint64_t modpow(uint64_t base, uint64_t exponent, uint64_t modulus);
+uint64_t modpow_two(uint64_t exponent, uint64_t modulus);
 
-template <typename T>
-T pow(T base, T exponent);
+uint64_t modpow_three(uint64_t exponent, uint64_t modulus);
 
-template <uint64_t N>
-uint64_t multiplicative_order(uint64_t p, const std::map<uint64_t, uint64_t>& factors);
+std::vector<uint64_t> order_two(std::map<uint64_t, uint64_t> factors, uint64_t p);
 
-std::vector<uint64_t> order(std::map<uint64_t, uint64_t> factors, uint64_t n, uint64_t p);
+bool order_three(std::map<uint64_t, uint64_t> factors, uint64_t p, std::vector<uint64_t> mo2);
 
 bool coprime_orders(uint64_t p);
 
