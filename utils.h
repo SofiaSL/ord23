@@ -7,13 +7,10 @@
 #include <ranges>
 #include <thread>
 #include <map>
-//#include <mp++/mp++.hpp>
 #include "factor.h"
 #include <numeric>
 #include <vector>
 #include <algorithm>
-
-//using int_t = mppp::integer<1>;
 
 void now(std::atomic<bool>& running);
 
