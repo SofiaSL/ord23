@@ -56,7 +56,7 @@ I ran a version of this program for 304 hours, giving this output:
 And
 
 ```
-cat out.txt | grep "." -o | wc -l
-5832
+cat out.txt | grep "\." -o | wc -l
+5754
 ```
-so we know these entries are the only ones up to the 5'832'000'000th prime, which is 143'740'658'653.
+so we know these entries are the only ones up to the 5'754'000'000th prime, which is 141'737'275'159.
