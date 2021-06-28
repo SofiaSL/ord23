@@ -7,20 +7,25 @@
 #include <ranges>
 #include <thread>
 #include <map>
-#include <mp++/mp++.hpp>
 #include "factor.h"
-
-using int_t = mppp::integer<1>;
+#include <numeric>
+#include <vector>
+#include <algorithm>
 
 void now(std::atomic<bool>& running);
 
-std::map<int_t, int> 
-factorint(const int_t num);
+std::map<uint64_t, uint64_t> factorint(const uint64_t num);
 
-template <int Base, typename T>
-T modpow(T exponent, T modulus);
+uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m);
 
-template <int N>
-int_t multiplicative_order(int_t p, const std::map<int_t, int>& factors);
+uint64_t modpow_two(uint64_t exponent, uint64_t modulus);
 
-bool coprime_orders(int_t p);
+uint64_t modpow_three(uint64_t exponent, uint64_t modulus);
+
+std::vector<uint64_t> order_two(std::map<uint64_t, uint64_t> factors, uint64_t p);
+
+bool order_three(std::map<uint64_t, uint64_t> factors, uint64_t p, std::vector<uint64_t> mo2);
+
+bool coprime_orders(uint64_t p);
+
+std::vector<uint64_t> batch(const std::vector<unsigned> &primes, uint64_t min, uint64_t max);
