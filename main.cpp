@@ -4,77 +4,23 @@
 #include <atomic>
 #include <thread>
 
-auto counter = int{0};
-//uint64_t i{143'740'658'653};
-uint64_t i{5};
-std::mutex m_screen;
-
-//void primes(int id) {
-    //while(i < 50'000) {
-        //m_screen.lock();
-        //m_screen.unlock();
-        //if(coprime_orders(i)) {
-            //m_screen.lock();
-            /*std::cout << '\n'
-                      << rang::fgB::red
-                      << i
-                      << rang::fg::reset
-                      << std::flush;*/
-            //m_screen.unlock();
-        //}
- 
-        //m_screen.lock();
-        //i = nextprime(i);
-       // m_screen.unlock();
- 
-        //if(0 == (++counter % 10'000'000)) {
-            //m_screen.lock();
-            //std::cout << '.' << std::flush;
-            //m_screen.unlock();
-        //}
-        //m_screen.unlock();
-        /*m_screen.lock();
-        const auto factors = factorint(i - 1);
-        const auto mo2 = multiplicative_order<2>(i, factors);
-        std::cout << i << " " << mo2 <<  "\n";
-        m_screen.unlock();
-
-        m_screen.lock();
-        i = nextprime(i);
-        m_screen.unlock();*/
-    //}
-//}
-        
-int main()
-{
-   /*while (i < 1'000'000'000'000)
-    {
-        if (coprime_orders(i))
-        {
+void thread(const std::vector<uint64_t> &batch) {
+    for(auto p : batch) {
+        if(coprime_orders(p)) {
             std::cout << '\n'
                       << rang::fgB::red
-                      << i
+                      << p
                       << rang::fg::reset
                       << std::flush;
         }
-
-        i = nextprime(i);
-
-        if (0 == (++counter % 10'000'000))
-            std::cout << '.' << std::flush;
-    }*/
-    /*const constexpr int nthreads {8};
-    std::vector<std::thread> threads;
-    for(int h = 0; h != nthreads; ++h) {
-        std::thread t (primes, h);
-        threads.push_back(std::move(t));
     }
-    for(auto& thread : threads) {
-        thread.join();
-    }*/
+    std::cout << "." << std::flush;
+}
+        
+int main() {
     const constexpr uint64_t ten13halves {3'162'277}; // sqrt(10^13)
     const constexpr uint64_t ten13 {10'000'000'000'000};
-    const constexpr uint64_t batch_size {100'000'000};
+    const constexpr uint64_t batch_size {1'000'000'000};
 
     std::vector<unsigned> primes; // all the primes less than 10^6.5
 
@@ -85,14 +31,24 @@ int main()
 	}
 
     for(auto p : primes) {
-        if(coprime_orders(p)) std::cout << p << std::endl;
+        if(coprime_orders(p)) {
+            std::cout << '\n'
+                      << rang::fgB::red
+                      << p
+                      << rang::fg::reset
+                      << std::flush;
+        }
     }
 
-    for(uint64_t n = 0; n != 100; ++n) {
-        auto v = batch(primes, n * batch_size, (n + 1) * batch_size);
-        for(auto p : v) {
-            if(coprime_orders(p)) std::cout << p << std::endl;
-        }
-        std::cout << "." << std::flush;
+    std::vector<std::thread> threads;
+
+    for(uint64_t n = 0; n != 10'000; ++n) {
+        auto vector = batch(primes, n * batch_size, (n + 1) * batch_size);
+        std::thread t(thread, vector);
+        threads.push_back(std::move(t));
+    }
+
+    for(auto& thread : threads) {
+        thread.join();
     }
 }
