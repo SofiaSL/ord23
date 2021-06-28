@@ -468,4 +468,5 @@ int main() {
             ankerl::nanobench::doNotOptimizeAway(coprime_orders4(i));
         }
     });
+    return 0;
 }

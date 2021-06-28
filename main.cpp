@@ -48,4 +48,5 @@ int main() {
         std::thread t(thread, vector);
         threads.push_back(std::move(t));
     }
+    return 0;
 }
